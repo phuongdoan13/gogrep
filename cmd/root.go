@@ -6,7 +6,7 @@ package cmd
 
 import (
 	"os"
-
+	"fmt"
 	"github.com/spf13/cobra"
 )
 
@@ -14,17 +14,18 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "gogrep",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Use:   "grep",
+	Short: "Search for matching pattern in a file",
+	Long: `
+		Grep is a useful command to search for a pattern in a file, which is short for 'global regular expression print'. 
+		It searches for the pattern in the file and prints the line that contains the pattern.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+					grep [options] pattern [file...]
+		
+	`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("grep called")
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
