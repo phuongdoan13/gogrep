@@ -21,15 +21,18 @@ func matchWholeText(pattern string, fileName string) {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		searchLine := line
-		searchPattern := pattern
-		if config.IsIgnoreCase {
-			searchLine = strings.ToLower(line)
-			searchPattern = strings.ToLower(pattern)
-		}
-
-		if strings.Contains(searchLine, searchPattern) {
+		if match(pattern, line) {
 			fmt.Println(line)
 		}
 	}
+}
+
+func match(pattern string, line string) bool {
+	searchLine := line
+	searchPattern := pattern
+	if config.IsIgnoreCase {
+		searchLine = strings.ToLower(line)
+		searchPattern = strings.ToLower(pattern)
+	}
+	return strings.Contains(searchLine, searchPattern)
 }
