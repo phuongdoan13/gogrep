@@ -58,6 +58,7 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolVarP(&config.IsIgnoreCase, "ignore-case", "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
+	rootCmd.Flags().BoolVarP(&config.IsPrintLnWithNumLine, "line-number", "n", false, "Prefix each line of the matching output with the line number in the input file.")
 }
 
 

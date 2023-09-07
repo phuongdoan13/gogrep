@@ -1,7 +1,6 @@
 package pkg
 
 import (
-	"fmt"
 	"os"
 	"bufio"
 	"strings"
@@ -18,11 +17,12 @@ func matchWholeText(pattern string, fileName string) {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	lineNumber := 0
 	for scanner.Scan() {
 		line := scanner.Text()
-
+		lineNumber += 1
 		if match(pattern, line) {
-			fmt.Println(line)
+			fmtPrintLn(line, lineNumber)
 		}
 	}
 }
@@ -36,3 +36,4 @@ func match(pattern string, line string) bool {
 	}
 	return strings.Contains(searchLine, searchPattern)
 }
+
