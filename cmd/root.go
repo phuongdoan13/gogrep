@@ -8,6 +8,7 @@ import (
 	"os"
 	"fmt"
 	"github.com/spf13/cobra"
+	"github.com/phuongdoan13/gogrep/pkg"
 )
 
 
@@ -16,6 +17,7 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "grep",
 	Short: "Search for matching pattern in a file",
+	Args:  cobra.ExactArgs(2),
 	Long: `
 		Grep is a useful command to search for a pattern in a file, which is short for 'global regular expression print'. 
 		It searches for the pattern in the file and prints the line that contains the pattern.
@@ -25,6 +27,7 @@ var rootCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("grep called")
+		pkg.Grep(args[0], args[1])
 	},
 }
 
