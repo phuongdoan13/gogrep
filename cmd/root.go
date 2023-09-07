@@ -7,11 +7,11 @@ package cmd
 import (
 	"os"
 	"fmt"
+	"strings"
 	"github.com/spf13/cobra"
 	"github.com/phuongdoan13/gogrep/pkg"
+	"github.com/phuongdoan13/gogrep/config"
 )
-
-
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -27,7 +27,14 @@ var rootCmd = &cobra.Command{
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("grep called")
-		pkg.Grep(args[0], args[1])
+		pattern := args[0]
+		fileName := args[1]
+		
+		if config.IsIgnoreCase {
+			pattern = strings.ToLower(pattern)
+		}
+		
+		pkg.Grep(pattern, fileName)
 	},
 }
 
@@ -50,6 +57,7 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.Flags().BoolVarP(&config.IsIgnoreCase, "ignore-case", "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
 }
 
 
