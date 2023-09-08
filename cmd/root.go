@@ -7,7 +7,6 @@ package cmd
 import (
 	"os"
 	"fmt"
-	"strings"
 	"github.com/spf13/cobra"
 	"github.com/phuongdoan13/gogrep/pkg"
 	"github.com/phuongdoan13/gogrep/config"
@@ -26,20 +25,16 @@ var rootCmd = &cobra.Command{
 		
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("grep called")
 		pattern := args[0]
 		fileName := args[1]
 		
-		if config.IsIgnoreCase {
-			pattern = strings.ToLower(pattern)
-		}
-		
-		pkg.Grep(pattern, fileName)
+		result := pkg.Grep(pattern, fileName)
+		ans := formatOutput(result)
+
+		fmt.Fprintf(cmd.OutOrStdout(), ans)
 	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -48,17 +43,21 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.gogrep.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolVarP(&config.IsIgnoreCase, "ignore-case", "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
 	rootCmd.Flags().BoolVarP(&config.IsPrintLnWithNumLine, "line-number", "n", false, "Prefix each line of the matching output with the line number in the input file.")
 }
 
+func formatOutput(result []pkg.PairLineNumberAndLine) string {
+	var ans string
 
+	for _, pair := range result {
+		if config.IsPrintLnWithNumLine {
+			ans += fmt.Sprintf("%d %s\n", pair.LineNumber, pair.Line)
+		} else {
+			ans += fmt.Sprintf("%s\n", pair.Line)
+		}
+	}
+
+	return ans
+}
