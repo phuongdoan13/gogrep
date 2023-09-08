@@ -61,3 +61,7 @@ func formatOutput(result []pkg.PairLineNumberAndLine) string {
 
 	return ans
 }
+
+func GetRootCmd() *cobra.Command {
+	return rootCmd
+}
