@@ -48,9 +48,10 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 	rootCmd.Flags().BoolP(config.IgnoreCaseFlag, "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
 	rootCmd.Flags().BoolP(config.LineNumberFlag, "n", false, "Prefix each line of the matching output with the line number in the input file.")
-	
+	rootCmd.Flags().BoolP(config.InvertMatchFlag, "v", false, "Invert the sense of matching, to select non-matching lines.")
 	viper.BindPFlag(config.IgnoreCaseFlag, rootCmd.Flags().Lookup(config.IgnoreCaseFlag))
 	viper.BindPFlag(config.LineNumberFlag, rootCmd.Flags().Lookup(config.LineNumberFlag))
+	viper.BindPFlag(config.InvertMatchFlag, rootCmd.Flags().Lookup(config.InvertMatchFlag))
 }
 
 func formatOutput(result []pkg.PairLineNumberAndLine) string {
