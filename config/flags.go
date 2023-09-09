@@ -1,4 +1,4 @@
 package config
 
-var IsIgnoreCase bool
-var IsPrintLnWithNumLine bool
+const IgnoreCaseFlag = "ignore-case"
+const LineNumberFlag = "line-number"

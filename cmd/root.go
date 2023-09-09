@@ -5,11 +5,12 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"os"
 	"fmt"
-	"github.com/spf13/cobra"
+	"os"
 	"github.com/phuongdoan13/gogrep/pkg"
 	"github.com/phuongdoan13/gogrep/config"
+	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -24,7 +25,7 @@ var rootCmd = &cobra.Command{
 					grep [options] pattern [file...]
 		
 	`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) (error) {
 		pattern := args[0]
 		fileName := args[1]
 		
@@ -32,6 +33,7 @@ var rootCmd = &cobra.Command{
 		ans := formatOutput(result)
 
 		fmt.Fprintf(cmd.OutOrStdout(), ans)
+		return nil
 	},
 }
 
@@ -44,15 +46,18 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	rootCmd.Flags().BoolVarP(&config.IsIgnoreCase, "ignore-case", "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
-	rootCmd.Flags().BoolVarP(&config.IsPrintLnWithNumLine, "line-number", "n", false, "Prefix each line of the matching output with the line number in the input file.")
+	rootCmd.Flags().BoolP(config.IgnoreCaseFlag, "i", false, "Ignore case distinctions in both the PATTERN and the input files.")
+	rootCmd.Flags().BoolP(config.LineNumberFlag, "n", false, "Prefix each line of the matching output with the line number in the input file.")
+	
+	viper.BindPFlag(config.IgnoreCaseFlag, rootCmd.Flags().Lookup(config.IgnoreCaseFlag))
+	viper.BindPFlag(config.LineNumberFlag, rootCmd.Flags().Lookup(config.LineNumberFlag))
 }
 
 func formatOutput(result []pkg.PairLineNumberAndLine) string {
 	var ans string
 
 	for _, pair := range result {
-		if config.IsPrintLnWithNumLine {
+		if viper.GetBool(config.LineNumberFlag) {
 			ans += fmt.Sprintf("%d %s\n", pair.LineNumber, pair.Line)
 		} else {
 			ans += fmt.Sprintf("%s\n", pair.Line)

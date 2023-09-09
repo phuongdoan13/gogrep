@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"github.com/phuongdoan13/gogrep/config"
+	"github.com/spf13/viper"
 )
 
 func Grep(pattern string, fileName string) []PairLineNumberAndLine{
@@ -35,7 +36,7 @@ func match(pattern string, line string) bool {
 	searchLine := line
 	searchPattern := pattern
 
-	if config.IsIgnoreCase {
+	if viper.GetBool(config.IgnoreCaseFlag) {
 		searchLine = strings.ToLower(line)
 		searchPattern = strings.ToLower(pattern)
 	}
