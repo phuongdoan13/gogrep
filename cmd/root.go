@@ -22,13 +22,18 @@ var rootCmd = &cobra.Command{
 		Grep is a useful command to search for a pattern in a file, which is short for 'global regular expression print'. 
 		It searches for the pattern in the file and prints the line that contains the pattern.
 
-					grep [options] pattern [file...]
+					grep [flags] pattern filePath
 		
 	`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
 		pattern := args[0]
 		fileName := args[1]
-		
+
+		if viper.GetBool(config.RegexFlag) {
+			viper.Set(config.IgnoreCaseFlag, false)
+			viper.Set(config.ExactMatchFlag, false)
+		}
+
 		result := pkg.Grep(pattern, fileName)
 		ans := formatOutput(result)
 
@@ -50,10 +55,12 @@ func init() {
 	rootCmd.Flags().BoolP(config.LineNumberFlag, "n", false, "Prefix each line of the matching output with the line number in the input file.")
 	rootCmd.Flags().BoolP(config.InvertMatchFlag, "v", false, "Invert the sense of matching, to select non-matching lines.")
 	rootCmd.Flags().BoolP(config.ExactMatchFlag, "w", false, "Select only those lines that contains the exact word.")
+	rootCmd.Flags().BoolP(config.RegexFlag, "r", false, "Select only those lines that have matches a regex pattern. Disable --ignore-case and --exact-match flags.")
 	viper.BindPFlag(config.IgnoreCaseFlag, rootCmd.Flags().Lookup(config.IgnoreCaseFlag))
 	viper.BindPFlag(config.LineNumberFlag, rootCmd.Flags().Lookup(config.LineNumberFlag))
 	viper.BindPFlag(config.InvertMatchFlag, rootCmd.Flags().Lookup(config.InvertMatchFlag))
 	viper.BindPFlag(config.ExactMatchFlag, rootCmd.Flags().Lookup(config.ExactMatchFlag))
+	viper.BindPFlag(config.RegexFlag, rootCmd.Flags().Lookup(config.RegexFlag))
 }
 
 func formatOutput(result []pkg.PairLineNumberAndLine) string {

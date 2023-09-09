@@ -66,11 +66,16 @@ func match(pattern string, line string) bool {
 		searchPattern = strings.ToLower(pattern)
 	}
 
+	patternRegex := makeRegex(searchPattern)
+
+	return patternRegex.MatchString(searchLine)
+}
+
+func makeRegex(pattern string) *regexp.Regexp {
 	if viper.GetBool(config.ExactMatchFlag) {
-		matchResult, _ := regexp.MatchString(searchLine, searchPattern)
-		return matchResult 
+		return regexp.MustCompile(`\b` + regexp.QuoteMeta(pattern) + `\b`)
 	} else {
-		return strings.Contains(searchLine, searchPattern)
+		return regexp.MustCompile(pattern)
 	}
 }
 
