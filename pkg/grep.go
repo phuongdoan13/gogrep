@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"os"
 	"strings"
+	"regexp"
 	"github.com/phuongdoan13/gogrep/config"
 	"github.com/spf13/viper"
 )
@@ -65,7 +66,12 @@ func match(pattern string, line string) bool {
 		searchPattern = strings.ToLower(pattern)
 	}
 
-	return strings.Contains(searchLine, searchPattern)
+	if viper.GetBool(config.ExactMatchFlag) {
+		matchResult, _ := regexp.MatchString(searchLine, searchPattern)
+		return matchResult 
+	} else {
+		return strings.Contains(searchLine, searchPattern)
+	}
 }
 
 type PairLineNumberAndLine struct {
